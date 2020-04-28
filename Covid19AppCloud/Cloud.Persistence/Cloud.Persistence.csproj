@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>SmartSolucionesCuba.Covid19CubaInfo.Cloud.Persistence</AssemblyName>
+    <RootNamespace>SmartSolucionesCuba.Covid19CubaInfo.Cloud.Persistence</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="SAPRESSC.Core.Persistence" Version="2.1.0-alpha" />
+  </ItemGroup>
+
+</Project>

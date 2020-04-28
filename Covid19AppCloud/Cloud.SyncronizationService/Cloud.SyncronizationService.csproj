@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <AssemblyName>SmartSolucionesCuba.Covid19CubaInfo.Cloud.SyncronizationService</AssemblyName>
+    <RootNamespace>SmartSolucionesCuba.Covid19CubaInfo.Cloud.SyncronizationService</RootNamespace>
+  </PropertyGroup>
+
+</Project>
