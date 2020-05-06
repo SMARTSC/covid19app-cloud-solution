@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>SmartSolucionesCuba.Covid19CubaInfo.Cloud.Api.Connect</AssemblyName>
+    <RootNamespace>SmartSolucionesCuba.Covid19CubaInfo.Cloud.Api.Connect</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="SAPRESSC.Core.Api.Connect" Version="2.0.2-apha" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Cloud.Api.Common\Cloud.Api.Common.csproj" />
+  </ItemGroup>
+
+</Project>

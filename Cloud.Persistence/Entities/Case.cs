@@ -21,7 +21,7 @@ namespace SmartSolucionesCuba.Covid19CubaInfo.Cloud.Persistence.Entities
 
         public System.DateTime DetectAt { get; set; }
 
-        [System.ComponentModel.DataAnnotations.Schema.ForeignKey("Municipality")]
+        [System.ComponentModel.DataAnnotations.Schema.ForeignKey("DetectionMunicipality")]
         public int DetectionMunicipalityId { get; set; }
 
         public Municipality DetectionMunicipality { get; set; }
@@ -41,7 +41,13 @@ namespace SmartSolucionesCuba.Covid19CubaInfo.Cloud.Persistence.Entities
 
         public Enumerations.CaseKind Kind { get; set; }
 
+        [System.ComponentModel.DataAnnotations.Schema.ForeignKey("DiagnosticCenter")]
+        public string DiagnosticCenterId { get; set; }
+
         public DiagnosticCenter DiagnosticCenter { get; set; }
+
+        [System.ComponentModel.DataAnnotations.Schema.ForeignKey("IsolationCenter")]
+        public string IsolationCenterId { get; set; }
 
         public IsolationCenter IsolationCenter { get; set; }
 

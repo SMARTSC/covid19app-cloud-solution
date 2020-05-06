@@ -2,6 +2,8 @@
 {
     public enum CaseKind
     {
-        Imported
+        Imported,
+        Inserted,
+        Local
     }
 }

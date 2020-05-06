@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>SmartSolucionesCuba.Covid19CubaInfo.Cloud.Api.Common</AssemblyName>
+    <RootNamespace>SmartSolucionesCuba.Covid19CubaInfo.Cloud.Api.Common</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Cloud.Persistence\Cloud.Persistence.csproj" />
+  </ItemGroup>
+
+</Project>
