@@ -36,6 +36,11 @@ namespace SmartSolucionesCuba.Covid19CubaInfo.Cloud.SyncronizationService.Worker
 
             var unsyncronizedReports = new System.Collections.Generic.List<Models.Report>();
 
+            if (unsyncronizedReports.Count <= 0)
+            {
+                throw new Exceptions.NotUpdatedDataSourceException();
+            }
+
             var localReportDictionaries = model.ReportDictionary.Values.ElementAt(0);
 
             if (currentReports.Length == 0)

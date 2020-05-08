@@ -5,48 +5,64 @@ namespace SmartSolucionesCuba.Covid19CubaInfo.Cloud.SyncronizationService.Instan
     internal class PrimaryDataSourceUpdateHostedServiceIntance : Microsoft.Extensions.Hosting.BackgroundService
     {
         private readonly ILogger<PrimaryDataSourceUpdateHostedServiceIntance> logger;
-        private readonly Microsoft.Extensions.Options.IOptions<Options.PerformanceOptions> performanceOptions;
+        private readonly Microsoft.Extensions.Options.IOptions<Options.BehaviorOptions> behaviorOptions;
         private readonly Workers.Facade.IAsyncWorker worker;
 
-        public PrimaryDataSourceUpdateHostedServiceIntance(Workers.Facade.IAsyncWorker worker, ILogger<PrimaryDataSourceUpdateHostedServiceIntance> logger, Microsoft.Extensions.Options.IOptions<Options.PerformanceOptions> performanceOptions)
+        public PrimaryDataSourceUpdateHostedServiceIntance(Workers.Facade.IAsyncWorker worker, ILogger<PrimaryDataSourceUpdateHostedServiceIntance> logger, Microsoft.Extensions.Options.IOptions<Options.BehaviorOptions> behaviorOptions)
         {
             this.logger = logger;
-            this.performanceOptions = performanceOptions;
+            this.behaviorOptions = behaviorOptions;
             this.worker = worker;
         }
 
         protected override async System.Threading.Tasks.Task ExecuteAsync(System.Threading.CancellationToken cancellationToken)
         {
-            await System.Threading.Tasks.Task.Delay(System.TimeSpan.FromSeconds(30));
+            await System.Threading.Tasks.Task.Delay(behaviorOptions.Value.StartUpDelayTime);
 
             while (!cancellationToken.IsCancellationRequested)
             {
-                var startedAt = System.DateTime.Now;
-
-                logger.LogDebug("Request handling iteration started at {0}", startedAt);
-
-                try
+                while (true)
                 {
-                    await worker.DoWorkAsync(cancellationToken);
+                    if (cancellationToken.IsCancellationRequested) break;
+
+                    try
+                    {
+                        await worker.DoWorkAsync(cancellationToken);
+
+                        if (cancellationToken.IsCancellationRequested) break;
+
+                        var endedAtDateTime = System.DateTime.Now;
+
+                        var endAtDate = endedAtDateTime.Date;
+
+                        var nextDailySyncronizationDate = endAtDate.AddDays(1) + behaviorOptions.Value.DailySyncronizationStartTime;
+
+                        var delayTime = nextDailySyncronizationDate - endedAtDateTime;
+
+                        if (delayTime < System.TimeSpan.Zero)
+                        {
+                            nextDailySyncronizationDate = nextDailySyncronizationDate.AddDays(1);
+
+                            delayTime = nextDailySyncronizationDate - endedAtDateTime;
+                        }
+
+                        await System.Threading.Tasks.Task.Delay(delayTime);
+                    }
+                    catch (Exceptions.NotUpdatedDataSourceException)
+                    {
+                        await System.Threading.Tasks.Task.Delay(behaviorOptions.Value.DailySyncronizationRetryDelayTime);
+                    }
+                    catch (System.Net.Http.HttpRequestException)
+                    {
+                        await System.Threading.Tasks.Task.Delay(behaviorOptions.Value.DailySyncronizationRetryDelayTime);
+                    }
+                    catch (System.Exception exception)
+                    {
+                        logger.LogError("Worker unhandled exception", exception);
+
+                        throw exception;
+                    }
                 }
-                catch (System.Exception exception)
-                {
-                    logger.LogError("Worker unhandled exception", exception);
-                }
-
-                var endedAt = System.DateTime.Now;
-
-                var elpaseTime = endedAt - startedAt;
-
-                logger.LogDebug("Request handling iteration ended at {0}", endedAt);
-
-                var delayTime = performanceOptions.Value.WorkerRunUpTimeDelay - elpaseTime;
-
-                if (delayTime < System.TimeSpan.Zero || cancellationToken.IsCancellationRequested) continue;
-
-                logger.LogDebug("Request handling iteration weiting {0}", delayTime);
-
-                await System.Threading.Tasks.Task.Delay(delayTime);
             }
         }
     }

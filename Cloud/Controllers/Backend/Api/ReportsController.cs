@@ -18,10 +18,5 @@ namespace SmartSolucionesCuba.Covid19CubaInfo.Cloud.Controllers.Backend.Api
         {
             return NotFound();
         }
-
-        protected override void ValidateCreate(ReportInputModel inputModel)
-        {
-            base.ValidateCreate(inputModel);
-        }
     }
 }

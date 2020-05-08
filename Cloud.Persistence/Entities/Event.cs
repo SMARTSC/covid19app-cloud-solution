@@ -29,6 +29,7 @@ namespace SmartSolucionesCuba.Covid19CubaInfo.Cloud.Persistence.Entities
 
         public GeoPoint CenterGeoPoint { get; set; }
 
+        // TODO Replace by GEOJSON string representative property
         public System.Collections.Generic.List<EventGeoPointBridge> AreaGeoPointBridges { get; set; }
     }
 }

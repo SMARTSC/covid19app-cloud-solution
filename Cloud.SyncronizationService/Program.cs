@@ -49,7 +49,7 @@ namespace SmartSolucionesCuba.Covid19CubaInfo.Cloud.SyncronizationService
                 })
                 .ConfigureServices((hostContext, services) =>
                 {
-                    services.Configure<Options.PerformanceOptions>(hostContext.Configuration.GetSection("Performance"));
+                    services.Configure<Options.BehaviorOptions>(hostContext.Configuration.GetSection("Behavior"));
                     services.Configure<Options.DataSourceUpstreamOptions>(hostContext.Configuration.GetSection("DataSourceUpstream"));
                     services.Configure<Options.CloudOptions>(hostContext.Configuration.GetSection("Cloud"));
 
