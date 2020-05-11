@@ -28,10 +28,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\Frontend\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Cloud.Api.Common\Cloud.Api.Common.csproj" />
   </ItemGroup>
 
