@@ -4,6 +4,9 @@ namespace SmartSolucionesCuba.Covid19CubaInfo.Cloud.Models.Data
 {
     public class UpdateDataModel
     {
+        [JsonProperty(PropertyName = "update-id")]
+        public int Id { get; set; }
+
         [JsonProperty(PropertyName = "update-date")]
         public string Date { get; set; }
 

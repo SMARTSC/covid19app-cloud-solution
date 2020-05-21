@@ -30,6 +30,11 @@ namespace SmartSolucionesCuba.Covid19CubaInfo.Cloud.Controllers.Frontend.Api
                 requiredReports = allReports.Where(entity => entity.Id > key).ToArray();
             }
 
+            if (requiredReports.Length <= 0)
+            {
+                return NoContent();
+            }
+
             var previewsLastReport = allReports[allReports.Length - 2];
             var lastReport = allReports.Last();
 
@@ -82,6 +87,7 @@ namespace SmartSolucionesCuba.Covid19CubaInfo.Cloud.Controllers.Frontend.Api
 
             var model = new Models.Data.UpdateDataModel
             {
+                Id = lastReport.Id,
                 Date = lastReport.At.ToShortDateString(),
                 SummaryOverview = new Models.Data.SummaryOverviewDataModel
                 {
