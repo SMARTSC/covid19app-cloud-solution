@@ -2,7 +2,7 @@
 
 namespace SmartSolucionesCuba.Covid19CubaInfo.Cloud.Persistence.Entities
 {
-    public class Case : SAPRESSC.Core.Persistence.Entities.IEntity<string>
+    public class Case : SAPRESSC.Core.Persistence.Entities.IEntity<long>
     {
         public Case()
         {
@@ -11,8 +11,9 @@ namespace SmartSolucionesCuba.Covid19CubaInfo.Cloud.Persistence.Entities
         }
 
         [Key]
-        public string Id { get; set; }
+        public long Id { get; set; }
 
+        [System.ComponentModel.DataAnnotations.Schema.ForeignKey("Report")]
         public int ReportId { get; set; }
 
         public Report Report { get; set; }
@@ -22,7 +23,7 @@ namespace SmartSolucionesCuba.Covid19CubaInfo.Cloud.Persistence.Entities
         public System.DateTime DetectAt { get; set; }
 
         [System.ComponentModel.DataAnnotations.Schema.ForeignKey("DetectionMunicipality")]
-        public int DetectionMunicipalityId { get; set; }
+        public string DetectionMunicipalityId { get; set; }
 
         public Municipality DetectionMunicipality { get; set; }
 

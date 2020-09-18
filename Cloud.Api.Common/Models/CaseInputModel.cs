@@ -2,16 +2,15 @@
 
 namespace SmartSolucionesCuba.Covid19CubaInfo.Cloud.Api.Common.Models
 {
-    public class CaseInputModel : SAPRESSC.Core.Persistence.Models.IEntityInputModel<Persistence.Entities.Case, string>
+    public class CaseInputModel : SAPRESSC.Core.Persistence.Models.IEntityInputModel<Persistence.Entities.Case, long>
     {
-        [System.ComponentModel.DataAnnotations.Required]
-        public string Id { get; set; }
+        public long Id { get; set; }
 
         public System.DateTime ArriveAt { get; set; }
 
         public System.DateTime DetectAt { get; set; }
 
-        public int DetectionMunicipalityId { get; set; }
+        public string DetectionMunicipalityId { get; set; }
 
         public int ContactCount { get; set; }
 
@@ -36,10 +35,7 @@ namespace SmartSolucionesCuba.Covid19CubaInfo.Cloud.Api.Common.Models
 
         public Persistence.Entities.Case Export()
         {
-            var entity = new Persistence.Entities.Case
-            {
-                Id = Id
-            };
+            var entity = new Persistence.Entities.Case();
 
             Mergue(entity);
 

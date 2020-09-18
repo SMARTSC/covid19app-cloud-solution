@@ -2,7 +2,7 @@
 
 namespace SmartSolucionesCuba.Covid19CubaInfo.Cloud.Persistence.EF.Repositories
 {
-    public class MunicipalityRepository : SAPRESSC.Core.Persistence.EF.Repositories.AbstractEntityRepository<Entities.Municipality, int>
+    public class MunicipalityRepository : SAPRESSC.Core.Persistence.EF.Repositories.AbstractEntityRepository<Entities.Municipality, string>
     {
         public MunicipalityRepository(DbContext dbContext) : base(dbContext)
         {

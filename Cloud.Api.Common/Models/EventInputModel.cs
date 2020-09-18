@@ -12,16 +12,19 @@
 
         public bool Checked { get; set; }
 
-        public int MunicipalityId { get; set; }
+        public int PushDay { get; set; }
 
-        public GeoPointInputModel CenterGeoPoint { get; set; }
+        public string MunicipalityId { get; set; }
+
+        public decimal CenterGeoPointLatitude { get; set; }
+
+        public decimal CenterGeoPointLongitude { get; set; }
 
         public Persistence.Entities.Event Export()
         {
             var entity = new Persistence.Entities.Event
             {
-                Id = Id,
-                CenterGeoPoint = new Persistence.Entities.GeoPoint()
+                Id = Id
             };
 
             Mergue(entity);
@@ -35,10 +38,10 @@
             Label = entity.Label;
             Opened = entity.Opened;
             Checked = entity.Checked;
+            PushDay = entity.PushDay;
             MunicipalityId = entity.MunicipalityId;
-            CenterGeoPoint = new GeoPointInputModel();
-
-            CenterGeoPoint.Import(entity.CenterGeoPoint);
+            CenterGeoPointLatitude = entity.CenterGeoPointLatitude;
+            CenterGeoPointLongitude = entity.CenterGeoPointLongitude;
         }
 
         public void Mergue(Persistence.Entities.Event entity)
@@ -46,9 +49,10 @@
             entity.Label = Label;
             entity.Opened = Opened;
             entity.Checked = Checked;
+            entity.PushDay = PushDay;
             entity.MunicipalityId = MunicipalityId;
-            entity.CenterGeoPoint.Latitude = CenterGeoPoint.Latitude;
-            entity.CenterGeoPoint.Longitude = CenterGeoPoint.Longitude;
+            entity.CenterGeoPointLatitude = CenterGeoPointLatitude;
+            entity.CenterGeoPointLongitude = CenterGeoPointLongitude;
         }
     }
 }

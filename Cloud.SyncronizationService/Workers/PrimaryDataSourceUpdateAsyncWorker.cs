@@ -30,16 +30,13 @@ namespace SmartSolucionesCuba.Covid19CubaInfo.Cloud.SyncronizationService.Worker
                 });
             }
 
+            var lastReportId = 0;
+
             var reportsApiClient = new Api.Connect.Clients.ReportsApiClient(httpClientHelperProvider);
 
             var currentReports = await reportsApiClient.GetAsync();
 
             var unsyncronizedReports = new System.Collections.Generic.List<Models.Report>();
-
-            if (unsyncronizedReports.Count <= 0)
-            {
-                throw new Exceptions.NotUpdatedDataSourceException();
-            }
 
             var localReportDictionaries = model.ReportDictionary.Values.ElementAt(0);
 
@@ -47,9 +44,11 @@ namespace SmartSolucionesCuba.Covid19CubaInfo.Cloud.SyncronizationService.Worker
             {
                 unsyncronizedReports.AddRange(localReportDictionaries.Select(item =>
                 {
+                    lastReportId = int.Parse(item.Key);
+
                     var report = item.Value;
 
-                    report.Id = int.Parse(item.Key);
+                    report.Id = lastReportId;
 
                     return report;
                 }));
@@ -62,21 +61,33 @@ namespace SmartSolucionesCuba.Covid19CubaInfo.Cloud.SyncronizationService.Worker
 
                     if (!currentReports.Any(current => current.Id == rawReportId))
                     {
+                        lastReportId = rawReportId;
+
                         var report = item.Value;
 
-                        report.Id = rawReportId;
+                        report.Id = lastReportId;
 
                         unsyncronizedReports.Add(report);
                     }
                 }
             }
 
+            if (unsyncronizedReports.Count <= 0)
+            {
+                throw new Exceptions.NotUpdatedDataSourceException();
+            }
+
             await model.SyncronizeCountriesAsync(unsyncronizedReports, httpClientHelperProvider);
+
             await model.SyncronizeProvincesAsync(unsyncronizedReports, httpClientHelperProvider);
+
             await model.SyncronizeMunicipalitiesAsync(unsyncronizedReports, httpClientHelperProvider);
-            await model.SyncronizeIsolationCentersAsync(httpClientHelperProvider);
-            await model.SyncronizeDiagnosticCentersAsync(httpClientHelperProvider);
-            await model.SyncronizeEventsAsync(httpClientHelperProvider);
+
+            var isolationCenters = await model.SyncronizeIsolationCentersAsync(lastReportId, httpClientHelperProvider);
+
+            var diagnosticCenters = await model.SyncronizeDiagnosticCentersAsync(lastReportId, httpClientHelperProvider);
+
+            await model.SyncronizeEventsAsync(lastReportId, httpClientHelperProvider);
 
             foreach (var report in unsyncronizedReports)
             {
@@ -98,7 +109,6 @@ namespace SmartSolucionesCuba.Covid19CubaInfo.Cloud.SyncronizationService.Worker
                 {
                     input.Cases = report.Cases.Select(raw => new Api.Common.Models.CaseInputModel
                     {
-                        Id = raw.Id,
                         CountryId = raw.CountryCode,
                         Age = raw.Age,
                         Sex = raw.Sex == RAW_MODEL_SEX_MALE ? Persistence.Enumerations.Sex.Male : Persistence.Enumerations.Sex.Female,
@@ -106,9 +116,9 @@ namespace SmartSolucionesCuba.Covid19CubaInfo.Cloud.SyncronizationService.Worker
                         ArriveAt = raw.ArriveAt,
                         DetectAt = raw.DetectAt,
                         ContactCount = raw.ContactCount,
-                        DetectionMunicipalityId = string.IsNullOrEmpty(raw.MunicipalityCode) ? 0 : int.Parse(raw.MunicipalityCode.Split(".")[1]),
-                        DiagnosticCenterId = raw.DiagnosticCenterId,
-                        IsolationCenterId = raw.IsolationCenterId,
+                        DetectionMunicipalityId = raw.MunicipalityCode,
+                        DiagnosticCenterId = diagnosticCenters.Any(m => m.Id == raw.DiagnosticCenterId) ? raw.DiagnosticCenterId : null,
+                        IsolationCenterId = isolationCenters.Any(m => m.Id == raw.IsolationCenterId) ? raw.IsolationCenterId : null,
                         ContactProvinces = GetCaseContactProvinces(raw),
                         PossibleContagionCountries = GetCasePossibleContagionCountries(raw),
                         About = raw.About

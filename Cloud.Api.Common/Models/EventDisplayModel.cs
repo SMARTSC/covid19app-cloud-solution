@@ -10,9 +10,13 @@
 
         public bool Checked { get; set; }
 
+        public int PushDay { get; set; }
+
         public MunicipalityDisplayModel Municipality { get; set; }
 
-        public GeoPointDisplayModel CenterGeoPoint { get; set; }
+        public decimal CenterGeoPointLatitude { get; set; }
+
+        public decimal CenterGeoPointLongitude { get; set; }
 
         public void Import(Persistence.Entities.Event entity)
         {
@@ -20,11 +24,12 @@
             Label = entity.Label;
             Opened = entity.Opened;
             Checked = entity.Checked;
+            PushDay = entity.PushDay;
+            CenterGeoPointLatitude = entity.CenterGeoPointLatitude;
+            CenterGeoPointLongitude = entity.CenterGeoPointLongitude;
             Municipality = new MunicipalityDisplayModel();
-            CenterGeoPoint = new GeoPointDisplayModel();
 
             Municipality.Import(entity.Municipality);
-            CenterGeoPoint.Import(entity.CenterGeoPoint);
         }
     }
 }

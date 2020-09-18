@@ -139,13 +139,11 @@ namespace SmartSolucionesCuba.Covid19CubaInfo.Cloud.SyncronizationService.Extens
             {
                 var municipalityCodeParts = item.MunicipalityCode.Split(".");
 
-                var municipalityId = int.Parse(municipalityCodeParts[1]);
-
-                if (!currentMunicipalities.Any(i => i.Id == municipalityId) && !newMunicipalities.Any(i => i.Id == municipalityId))
+                if (!currentMunicipalities.Any(i => i.Id == item.MunicipalityCode) && !newMunicipalities.Any(i => i.Id == item.MunicipalityCode))
                 {
                     newMunicipalities.Add(new Api.Common.Models.MunicipalityInputModel
                     {
-                        Id = municipalityId,
+                        Id = item.MunicipalityCode,
                         Name = item.MunicipalityName,
                         ProvinceId = int.Parse(municipalityCodeParts[0])
                     });
@@ -162,13 +160,11 @@ namespace SmartSolucionesCuba.Covid19CubaInfo.Cloud.SyncronizationService.Extens
 
                     var municipalityCodeParts = @case.MunicipalityCode.Split(".");
 
-                    var municipalityId = int.Parse(municipalityCodeParts[1]);
-
-                    if (!currentMunicipalities.Any(i => i.Id == municipalityId) && !newMunicipalities.Any(i => i.Id == municipalityId))
+                    if (!currentMunicipalities.Any(i => i.Id == @case.MunicipalityCode) && !newMunicipalities.Any(i => i.Id == @case.MunicipalityCode))
                     {
                         newMunicipalities.Add(new Api.Common.Models.MunicipalityInputModel
                         {
-                            Id = municipalityId,
+                            Id = @case.MunicipalityCode,
                             Name = @case.MunicipalityName,
                             ProvinceId = int.Parse(municipalityCodeParts[0])
                         });
@@ -182,7 +178,7 @@ namespace SmartSolucionesCuba.Covid19CubaInfo.Cloud.SyncronizationService.Extens
             }
         }
 
-        internal static async System.Threading.Tasks.Task SyncronizeIsolationCentersAsync(this Models.Covid19CubaDataModel source, IHttpClientHelperProviderFacade httpClientHelperProvider)
+        internal static async System.Threading.Tasks.Task<Api.Common.Models.IsolationCenterDisplayModel[]> SyncronizeIsolationCentersAsync(this Models.Covid19CubaDataModel source, int reportId, IHttpClientHelperProviderFacade httpClientHelperProvider)
         {
             var isolationCentersApiClient = new Api.Connect.Clients.IsolationCentersApiClient(httpClientHelperProvider);
 
@@ -200,18 +196,29 @@ namespace SmartSolucionesCuba.Covid19CubaInfo.Cloud.SyncronizationService.Extens
                     {
                         Id = item.Id,
                         Name = item.Name,
+                        PushDay = reportId,
                         ProvinceId = provinceId
                     });
                 }
             }
 
+            var result = new List<Api.Common.Models.IsolationCenterDisplayModel>(currentCenters);
+
             foreach (var model in newCenters)
             {
                 await isolationCentersApiClient.CreateAsync(model);
+
+                result.Add(new Api.Common.Models.IsolationCenterDisplayModel
+                {
+                    Id = model.Id,
+                    Name = model.Name
+                });
             }
+
+            return result.ToArray();
         }
 
-        internal static async System.Threading.Tasks.Task SyncronizeDiagnosticCentersAsync(this Models.Covid19CubaDataModel source, IHttpClientHelperProviderFacade httpClientHelperProvider)
+        internal static async System.Threading.Tasks.Task<Api.Common.Models.DiagnosticCenterDisplayModel[]> SyncronizeDiagnosticCentersAsync(this Models.Covid19CubaDataModel source, int reportId, IHttpClientHelperProviderFacade httpClientHelperProvider)
         {
             var diagnosticCentersApiClient = new Api.Connect.Clients.DiagnosticCentersApiClient(httpClientHelperProvider);
 
@@ -229,18 +236,29 @@ namespace SmartSolucionesCuba.Covid19CubaInfo.Cloud.SyncronizationService.Extens
                     {
                         Id = item.Id,
                         Name = item.Name,
+                        PushDay = reportId,
                         ProvinceId = provinceId
                     });
                 }
             }
 
+            var result = new List<Api.Common.Models.DiagnosticCenterDisplayModel>(currentCenters);
+
             foreach (var model in newCenters)
             {
                 await diagnosticCentersApiClient.CreateAsync(model);
+
+                result.Add(new Api.Common.Models.DiagnosticCenterDisplayModel
+                {
+                    Id = model.Id,
+                    Name = model.Name
+                });
             }
+
+            return result.ToArray();
         }
 
-        internal static async System.Threading.Tasks.Task SyncronizeEventsAsync(this Models.Covid19CubaDataModel source, IHttpClientHelperProviderFacade httpClientHelperProvider)
+        internal static async System.Threading.Tasks.Task SyncronizeEventsAsync(this Models.Covid19CubaDataModel source, int reposrtId, IHttpClientHelperProviderFacade httpClientHelperProvider)
         {
             var eventsApiClient = new Api.Connect.Clients.EventsApiClient(httpClientHelperProvider);
 
@@ -250,22 +268,37 @@ namespace SmartSolucionesCuba.Covid19CubaInfo.Cloud.SyncronizationService.Extens
 
             foreach (var item in source.Events.Values)
             {
-                if (!currentEvents.Any(i => i.Id == item.Id) && !newEvents.Any(i => i.Id == item.Id))
-                {
-                    var municipalityCodeParts = item.MunicipalityCode.Split(".");
+                var entity = currentEvents.FirstOrDefault(i => i.Id == item.Id);
 
-                    newEvents.Add(new Api.Common.Models.EventInputModel
+                if (entity == null)
+                {
+                    if (!newEvents.Any(i => i.Id == item.Id))
                     {
-                        Id = item.Id,
+                        newEvents.Add(new Api.Common.Models.EventInputModel
+                        {
+                            Id = item.Id,
+                            Label = item.Label,
+                            Opened = item.Opened,
+                            Checked = item.Checked,
+                            PushDay = reposrtId,
+                            MunicipalityId = item.MunicipalityCode,
+                            CenterGeoPointLatitude = item.CenterGeoPointLatitude,
+                            CenterGeoPointLongitude = item.CenterGeoPointLongitude
+                        });
+                    }
+                }
+                else if (!item.Equals(entity))
+                {
+                    await eventsApiClient.EditAsync(new Api.Common.Models.EventInputModel
+                    {
+                        Id = entity.Id,
                         Label = item.Label,
                         Opened = item.Opened,
                         Checked = item.Checked,
-                        MunicipalityId = int.Parse(municipalityCodeParts[1]),
-                        CenterGeoPoint = new Api.Common.Models.GeoPointInputModel
-                        {
-                            Latitude = item.CenterGeoPointLatitude,
-                            Longitude = item.CenterGeoPointLongitude
-                        }
+                        PushDay = reposrtId,
+                        MunicipalityId = item.MunicipalityCode,
+                        CenterGeoPointLatitude = item.CenterGeoPointLatitude,
+                        CenterGeoPointLongitude = item.CenterGeoPointLongitude
                     });
                 }
             }

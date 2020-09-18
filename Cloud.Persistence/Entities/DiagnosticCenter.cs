@@ -8,14 +8,15 @@
         [System.ComponentModel.DataAnnotations.Required]
         public string Name { get; set; }
 
+        public int PushDay { get; set; }
+
         [System.ComponentModel.DataAnnotations.Schema.ForeignKey("Province")]
         public int ProvinceId { get; set; }
 
         public Province Province { get; set; }
 
-        [System.ComponentModel.DataAnnotations.Schema.ForeignKey("GeoPoint")]
-        public System.Guid GeoPointId { get; set; }
+        public decimal GeoPointLatitude { get; set; }
 
-        public GeoPoint GeoPoint { get; set; }
+        public decimal GeoPointLongitude { get; set; }
     }
 }

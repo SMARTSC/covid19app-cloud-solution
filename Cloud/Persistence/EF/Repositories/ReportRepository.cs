@@ -11,7 +11,7 @@ namespace SmartSolucionesCuba.Covid19CubaInfo.Cloud.Persistence.EF.Repositories
         protected override System.Linq.IQueryable<Entities.Report> GetQueryableDbSet()
         {
             return base.GetQueryableDbSet()
-                .Include(e => e.Cases);
+                .Include(e => e.Cases).ThenInclude(e => e.DetectionMunicipality);
         }
     }
 }

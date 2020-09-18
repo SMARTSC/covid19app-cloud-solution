@@ -20,19 +20,6 @@ namespace SmartSolucionesCuba.Covid19CubaInfo.Cloud.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "geopoints",
-                columns: table => new
-                {
-                    id = table.Column<Guid>(nullable: false),
-                    longitude = table.Column<decimal>(nullable: false),
-                    latitude = table.Column<decimal>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("pk_geopoints", x => x.id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "provinces",
                 columns: table => new
                 {
@@ -85,62 +72,10 @@ namespace SmartSolucionesCuba.Covid19CubaInfo.Cloud.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "diagnosticcenters",
-                columns: table => new
-                {
-                    id = table.Column<string>(nullable: false),
-                    name = table.Column<string>(nullable: false),
-                    provinceid = table.Column<int>(nullable: false),
-                    geopointid = table.Column<Guid>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("pk_diagnosticcenters", x => x.id);
-                    table.ForeignKey(
-                        name: "fk_diagnosticcenters_geopoints_geopointid",
-                        column: x => x.geopointid,
-                        principalTable: "geopoints",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "fk_diagnosticcenters_provinces_provinceid",
-                        column: x => x.provinceid,
-                        principalTable: "provinces",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "isolationcenters",
-                columns: table => new
-                {
-                    id = table.Column<string>(nullable: false),
-                    name = table.Column<string>(nullable: false),
-                    provinceid = table.Column<int>(nullable: false),
-                    geopointid = table.Column<Guid>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("pk_isolationcenters", x => x.id);
-                    table.ForeignKey(
-                        name: "fk_isolationcenters_geopoints_geopointid",
-                        column: x => x.geopointid,
-                        principalTable: "geopoints",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "fk_isolationcenters_provinces_provinceid",
-                        column: x => x.provinceid,
-                        principalTable: "provinces",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "municipalities",
                 columns: table => new
                 {
-                    id = table.Column<int>(nullable: false),
+                    id = table.Column<string>(nullable: false),
                     name = table.Column<string>(nullable: false),
                     provinceid = table.Column<int>(nullable: false)
                 },
@@ -156,14 +91,102 @@ namespace SmartSolucionesCuba.Covid19CubaInfo.Cloud.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "cases",
+                name: "diagnosticcenters",
                 columns: table => new
                 {
                     id = table.Column<string>(nullable: false),
+                    name = table.Column<string>(nullable: false),
+                    reportid = table.Column<int>(nullable: false),
+                    provinceid = table.Column<int>(nullable: false),
+                    geopointlatitude = table.Column<decimal>(nullable: false),
+                    geopointlongitude = table.Column<decimal>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_diagnosticcenters", x => x.id);
+                    table.ForeignKey(
+                        name: "fk_diagnosticcenters_provinces_provinceid",
+                        column: x => x.provinceid,
+                        principalTable: "provinces",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "fk_diagnosticcenters_reports_reportid",
+                        column: x => x.reportid,
+                        principalTable: "reports",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "isolationcenters",
+                columns: table => new
+                {
+                    id = table.Column<string>(nullable: false),
+                    name = table.Column<string>(nullable: false),
+                    reportid = table.Column<int>(nullable: false),
+                    provinceid = table.Column<int>(nullable: false),
+                    geopointlatitude = table.Column<decimal>(nullable: false),
+                    geopointlongitude = table.Column<decimal>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_isolationcenters", x => x.id);
+                    table.ForeignKey(
+                        name: "fk_isolationcenters_provinces_provinceid",
+                        column: x => x.provinceid,
+                        principalTable: "provinces",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "fk_isolationcenters_reports_reportid",
+                        column: x => x.reportid,
+                        principalTable: "reports",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "events",
+                columns: table => new
+                {
+                    id = table.Column<string>(nullable: false),
+                    label = table.Column<string>(nullable: false),
+                    reportid = table.Column<int>(nullable: false),
+                    opened = table.Column<bool>(nullable: false),
+                    @checked = table.Column<bool>(name: "checked", nullable: false),
+                    municipalityid = table.Column<string>(nullable: true),
+                    centergeopointlatitude = table.Column<decimal>(nullable: false),
+                    centergeopointlongitude = table.Column<decimal>(nullable: false),
+                    areageodata = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_events", x => x.id);
+                    table.ForeignKey(
+                        name: "fk_events_municipalities_municipalityid",
+                        column: x => x.municipalityid,
+                        principalTable: "municipalities",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "fk_events_reports_reportid",
+                        column: x => x.reportid,
+                        principalTable: "reports",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "cases",
+                columns: table => new
+                {
+                    id = table.Column<long>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     reportid = table.Column<int>(nullable: false),
                     arriveat = table.Column<DateTime>(nullable: false),
                     detectat = table.Column<DateTime>(nullable: false),
-                    detectionmunicipalityid = table.Column<int>(nullable: false),
+                    detectionmunicipalityid = table.Column<string>(nullable: true),
                     contactcount = table.Column<int>(nullable: false),
                     countryid = table.Column<string>(nullable: true),
                     age = table.Column<int>(nullable: false),
@@ -187,7 +210,7 @@ namespace SmartSolucionesCuba.Covid19CubaInfo.Cloud.Migrations
                         column: x => x.detectionmunicipalityid,
                         principalTable: "municipalities",
                         principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "fk_cases_diagnosticcenters_diagnosticcenterid",
                         column: x => x.diagnosticcenterid,
@@ -209,38 +232,10 @@ namespace SmartSolucionesCuba.Covid19CubaInfo.Cloud.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "events",
-                columns: table => new
-                {
-                    id = table.Column<string>(nullable: false),
-                    label = table.Column<string>(nullable: false),
-                    opened = table.Column<bool>(nullable: false),
-                    @checked = table.Column<bool>(name: "checked", nullable: false),
-                    municipalityid = table.Column<int>(nullable: false),
-                    centergeopointid = table.Column<Guid>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("pk_events", x => x.id);
-                    table.ForeignKey(
-                        name: "fk_events_geopoints_centergeopointid",
-                        column: x => x.centergeopointid,
-                        principalTable: "geopoints",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "fk_events_municipalities_municipalityid",
-                        column: x => x.municipalityid,
-                        principalTable: "municipalities",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "casecountrybridges",
                 columns: table => new
                 {
-                    caseid = table.Column<string>(nullable: false),
+                    caseid = table.Column<long>(nullable: false),
                     countryid = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
@@ -264,7 +259,7 @@ namespace SmartSolucionesCuba.Covid19CubaInfo.Cloud.Migrations
                 name: "caseprovincebridges",
                 columns: table => new
                 {
-                    caseid = table.Column<string>(nullable: false),
+                    caseid = table.Column<long>(nullable: false),
                     provinceid = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -288,7 +283,7 @@ namespace SmartSolucionesCuba.Covid19CubaInfo.Cloud.Migrations
                 name: "reportcriticcasebridges",
                 columns: table => new
                 {
-                    caseid = table.Column<string>(nullable: false),
+                    caseid = table.Column<long>(nullable: false),
                     reportid = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -312,7 +307,7 @@ namespace SmartSolucionesCuba.Covid19CubaInfo.Cloud.Migrations
                 name: "reportdeadcasebridges",
                 columns: table => new
                 {
-                    caseid = table.Column<string>(nullable: false),
+                    caseid = table.Column<long>(nullable: false),
                     reportid = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -336,7 +331,7 @@ namespace SmartSolucionesCuba.Covid19CubaInfo.Cloud.Migrations
                 name: "reportevacuatecasebridges",
                 columns: table => new
                 {
-                    caseid = table.Column<string>(nullable: false),
+                    caseid = table.Column<long>(nullable: false),
                     reportid = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -360,7 +355,7 @@ namespace SmartSolucionesCuba.Covid19CubaInfo.Cloud.Migrations
                 name: "reportgravecasebridges",
                 columns: table => new
                 {
-                    caseid = table.Column<string>(nullable: false),
+                    caseid = table.Column<long>(nullable: false),
                     reportid = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -384,7 +379,7 @@ namespace SmartSolucionesCuba.Covid19CubaInfo.Cloud.Migrations
                 name: "reportrecoveredcasebridges",
                 columns: table => new
                 {
-                    caseid = table.Column<string>(nullable: false),
+                    caseid = table.Column<long>(nullable: false),
                     reportid = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -400,30 +395,6 @@ namespace SmartSolucionesCuba.Covid19CubaInfo.Cloud.Migrations
                         name: "fk_reportrecoveredcasebridges_reports_reportid",
                         column: x => x.reportid,
                         principalTable: "reports",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "eventgeopointbridges",
-                columns: table => new
-                {
-                    eventid = table.Column<string>(nullable: false),
-                    geopointid = table.Column<Guid>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("pk_eventgeopointbridges", x => new { x.eventid, x.geopointid });
-                    table.ForeignKey(
-                        name: "fk_eventgeopointbridges_events_eventid",
-                        column: x => x.eventid,
-                        principalTable: "events",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "fk_eventgeopointbridges_geopoints_geopointid",
-                        column: x => x.geopointid,
-                        principalTable: "geopoints",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -464,24 +435,14 @@ namespace SmartSolucionesCuba.Covid19CubaInfo.Cloud.Migrations
                 column: "reportid");
 
             migrationBuilder.CreateIndex(
-                name: "ix_diagnosticcenters_geopointid",
-                table: "diagnosticcenters",
-                column: "geopointid");
-
-            migrationBuilder.CreateIndex(
                 name: "ix_diagnosticcenters_provinceid",
                 table: "diagnosticcenters",
                 column: "provinceid");
 
             migrationBuilder.CreateIndex(
-                name: "ix_eventgeopointbridges_geopointid",
-                table: "eventgeopointbridges",
-                column: "geopointid");
-
-            migrationBuilder.CreateIndex(
-                name: "ix_events_centergeopointid",
-                table: "events",
-                column: "centergeopointid");
+                name: "ix_diagnosticcenters_reportid",
+                table: "diagnosticcenters",
+                column: "reportid");
 
             migrationBuilder.CreateIndex(
                 name: "ix_events_municipalityid",
@@ -489,14 +450,19 @@ namespace SmartSolucionesCuba.Covid19CubaInfo.Cloud.Migrations
                 column: "municipalityid");
 
             migrationBuilder.CreateIndex(
-                name: "ix_isolationcenters_geopointid",
-                table: "isolationcenters",
-                column: "geopointid");
+                name: "ix_events_reportid",
+                table: "events",
+                column: "reportid");
 
             migrationBuilder.CreateIndex(
                 name: "ix_isolationcenters_provinceid",
                 table: "isolationcenters",
                 column: "provinceid");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_isolationcenters_reportid",
+                table: "isolationcenters",
+                column: "reportid");
 
             migrationBuilder.CreateIndex(
                 name: "ix_municipalities_provinceid",
@@ -538,7 +504,7 @@ namespace SmartSolucionesCuba.Covid19CubaInfo.Cloud.Migrations
                 name: "caseprovincebridges");
 
             migrationBuilder.DropTable(
-                name: "eventgeopointbridges");
+                name: "events");
 
             migrationBuilder.DropTable(
                 name: "reportcriticcasebridges");
@@ -559,9 +525,6 @@ namespace SmartSolucionesCuba.Covid19CubaInfo.Cloud.Migrations
                 name: "traces");
 
             migrationBuilder.DropTable(
-                name: "events");
-
-            migrationBuilder.DropTable(
                 name: "cases");
 
             migrationBuilder.DropTable(
@@ -577,13 +540,10 @@ namespace SmartSolucionesCuba.Covid19CubaInfo.Cloud.Migrations
                 name: "isolationcenters");
 
             migrationBuilder.DropTable(
-                name: "reports");
-
-            migrationBuilder.DropTable(
-                name: "geopoints");
-
-            migrationBuilder.DropTable(
                 name: "provinces");
+
+            migrationBuilder.DropTable(
+                name: "reports");
         }
     }
 }

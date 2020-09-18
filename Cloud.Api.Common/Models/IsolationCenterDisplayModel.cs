@@ -6,21 +6,21 @@
 
         public string Name { get; set; }
 
+        public int PushDay { get; set; }
+
         public ProvinceDisplayModel Province { get; set; }
 
-        public GeoPointDisplayModel GeoPoint { get; set; }
+        public decimal GeoPointLatitude { get; set; }
+
+        public decimal GeoPointLongitude { get; set; }
 
         public void Import(Persistence.Entities.IsolationCenter entity)
         {
             Id = entity.Id;
             Name = entity.Name;
-
-            if (entity.GeoPoint != null)
-            {
-                GeoPoint = new GeoPointDisplayModel();
-
-                GeoPoint.Import(entity.GeoPoint);
-            }
+            PushDay = entity.PushDay;
+            GeoPointLatitude = entity.GeoPointLatitude;
+            GeoPointLongitude = entity.GeoPointLongitude;
 
             if (entity.Province != null)
             {

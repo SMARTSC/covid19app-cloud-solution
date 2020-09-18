@@ -8,9 +8,13 @@
         [System.ComponentModel.DataAnnotations.Required]
         public string Name { get; set; }
 
+        public int PushDay { get; set; }
+
         public int ProvinceId { get; set; }
 
-        public GeoPointInputModel GeoPoint { get; set; }
+        public decimal GeoPointLatitude { get; set; }
+
+        public decimal GeoPointLongitude { get; set; }
 
         public Persistence.Entities.IsolationCenter Export()
         {
@@ -28,24 +32,19 @@
         {
             Id = entity.Id;
             Name = entity.Name;
+            PushDay = entity.PushDay;
             ProvinceId = entity.ProvinceId;
-            GeoPoint = new GeoPointInputModel();
-
-            GeoPoint.Import(entity.GeoPoint);
+            GeoPointLatitude = entity.GeoPointLatitude;
+            GeoPointLongitude = entity.GeoPointLongitude;
         }
 
         public void Mergue(Persistence.Entities.IsolationCenter entity)
         {
             entity.Name = Name;
+            entity.PushDay = PushDay;
             entity.ProvinceId = ProvinceId;
-
-            if (GeoPoint == null) return;
-
-            entity.GeoPoint = new Persistence.Entities.GeoPoint
-            {
-                Latitude = GeoPoint.Latitude,
-                Longitude = GeoPoint.Longitude
-            };
+            entity.GeoPointLatitude = GeoPointLatitude;
+            entity.GeoPointLongitude = GeoPointLongitude;
         }
     }
 }

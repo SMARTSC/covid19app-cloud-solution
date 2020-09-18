@@ -1,8 +1,8 @@
 ﻿namespace SmartSolucionesCuba.Covid19CubaInfo.Cloud.Api.Common.Models
 {
-    public class MunicipalityInputModel : SAPRESSC.Core.Persistence.Models.IEntityInputModel<Persistence.Entities.Municipality, int>
+    public class MunicipalityInputModel : SAPRESSC.Core.Persistence.Models.IEntityInputModel<Persistence.Entities.Municipality, string>
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         [System.ComponentModel.DataAnnotations.Required]
         public string Name { get; set; }

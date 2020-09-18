@@ -2,9 +2,9 @@
 
 namespace SmartSolucionesCuba.Covid19CubaInfo.Cloud.Api.Common.Models
 {
-    public class CaseDisplayModel : SAPRESSC.Core.Persistence.Models.IEntityDisplayModel<Persistence.Entities.Case, string>
+    public class CaseDisplayModel : SAPRESSC.Core.Persistence.Models.IEntityDisplayModel<Persistence.Entities.Case, long>
     {
-        public string Id { get; set; }
+        public long Id { get; set; }
 
         public System.DateTime ArriveAt { get; set; }
 

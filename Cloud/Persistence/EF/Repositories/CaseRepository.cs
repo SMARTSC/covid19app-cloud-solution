@@ -2,7 +2,7 @@
 
 namespace SmartSolucionesCuba.Covid19CubaInfo.Cloud.Persistence.EF.Repositories
 {
-    public class CaseRepository : SAPRESSC.Core.Persistence.EF.Repositories.AbstractEntityRepository<Entities.Case, string>
+    public class CaseRepository : SAPRESSC.Core.Persistence.EF.Repositories.AbstractEntityRepository<Entities.Case, long>
     {
         public CaseRepository(DbContext dbContext) : base(dbContext)
         {

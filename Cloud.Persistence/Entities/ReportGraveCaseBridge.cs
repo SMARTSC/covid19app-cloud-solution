@@ -2,7 +2,7 @@
 {
     public class ReportGraveCaseBridge
     {
-        public string CaseId { get; set; }
+        public long CaseId { get; set; }
 
         public Case Case { get; set; }
 

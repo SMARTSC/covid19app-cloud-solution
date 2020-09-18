@@ -35,13 +35,14 @@ namespace SmartSolucionesCuba.Covid19CubaInfo.Cloud
 
             services.AddScoped<IEntityRepository<Persistence.Entities.Country, string>, Persistence.EF.Repositories.CountryRepository>();
             services.AddScoped<IEntityRepository<Persistence.Entities.Province, int>, Persistence.EF.Repositories.ProvinceRepository>();
-            services.AddScoped<IEntityRepository<Persistence.Entities.Municipality, int>, Persistence.EF.Repositories.MunicipalityRepository>();
+            services.AddScoped<IEntityRepository<Persistence.Entities.Municipality, string>, Persistence.EF.Repositories.MunicipalityRepository>();
             services.AddScoped<IEntityRepository<Persistence.Entities.DiagnosticCenter, string>, Persistence.EF.Repositories.DiagnosticCenterRepository>();
             services.AddScoped<IEntityRepository<Persistence.Entities.IsolationCenter, string>, Persistence.EF.Repositories.IsolationCenterRepository>();
             services.AddScoped<IEntityRepository<Persistence.Entities.Event, string>, Persistence.EF.Repositories.EventRepository>();
             services.AddScoped<IEntityRepository<Persistence.Entities.Report, int>, Persistence.EF.Repositories.ReportRepository>();
-            services.AddScoped<IEntityRepository<Persistence.Entities.Case, string>, Persistence.EF.Repositories.CaseRepository>();
-            services.AddScoped<IEntityRepository<Persistence.Entities.GeoPoint, System.Guid>, Persistence.EF.Repositories.GeoPointRepository>();
+            services.AddScoped<IEntityRepository<Persistence.Entities.Case, long>, Persistence.EF.Repositories.CaseRepository>();
+            services.AddScoped<IEntityRepository<Persistence.Entities.AppUpdateAdvise, int>, Persistence.EF.Repositories.AppUpdateAdviseRepository>();
+            services.AddScoped<IEntityRepository<Persistence.Entities.VendorAdvise, int>, Persistence.EF.Repositories.VendorAdviseRepository>();
 
             services.AddSingleton<SAPRESSC.Core.Persistence.EF.Providers.Facade.IDbSchemaConfigurationProviderFacade, Persistence.EF.Providers.CloudDbSchemaConfigurationProvider>();
 

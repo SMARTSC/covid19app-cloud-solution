@@ -6,6 +6,8 @@ namespace SmartSolucionesCuba.Covid19CubaInfo.Cloud.Persistence.EF.Context
 {
     public class ApplicationDbContext : SAPRESSC.Core.Persistence.EF.Context.AbstractTraceableDbContext
     {
+        public override bool TraceChanges => false;
+
         public ApplicationDbContext(IEnumerable<IDbSchemaConfigurationProviderFacade> dbSchemaConfigurationProviders, DbContextOptions options) : base(dbSchemaConfigurationProviders, options)
         {
         }
@@ -13,7 +15,6 @@ namespace SmartSolucionesCuba.Covid19CubaInfo.Cloud.Persistence.EF.Context
         public DbSet<Entities.Province> Provinces { get; set; }
         public DbSet<Entities.Municipality> Municipalities { get; set; }
         public DbSet<Entities.Country> Countries { get; set; }
-        public DbSet<Entities.GeoPoint> GeoPoints { get; set; }
         public DbSet<Entities.IsolationCenter> IsolationCenters { get; set; }
         public DbSet<Entities.DiagnosticCenter> DiagnosticCenters { get; set; }
         public DbSet<Entities.Event> Events { get; set; }
@@ -21,11 +22,14 @@ namespace SmartSolucionesCuba.Covid19CubaInfo.Cloud.Persistence.EF.Context
         public DbSet<Entities.Report> Reports { get; set; }
         public DbSet<Entities.CaseCountryBridge> CaseCountryBridges { get; set; }
         public DbSet<Entities.CaseProvinceBridge> CaseProvinceBridges { get; set; }
-        public DbSet<Entities.EventGeoPointBridge> EventGeoPointBridges { get; set; }
         public DbSet<Entities.ReportDeadCaseBridge> ReportDeadCaseBridges { get; set; }
         public DbSet<Entities.ReportCriticCaseBridge> ReportCriticCaseBridges { get; set; }
         public DbSet<Entities.ReportEvacuateCaseBridge> ReportEvacuateCaseBridges { get; set; }
         public DbSet<Entities.ReportGraveCaseBridge> ReportGraveCaseBridges { get; set; }
         public DbSet<Entities.ReportRecoveredCaseBridge> ReportRecoveredCaseBridges { get; set; }
+        public DbSet<Entities.AppUpdateAdvise> AppUpdateAdvises { get; set; }
+        public DbSet<Entities.AppUpdateFeature> AppUpdateFeatures { get; set; }
+        public DbSet<Entities.VendorAdvise> VendorAdvises { get; set; }
+        public DbSet<Entities.VendorAdviseFeature> VendorAdviseFeatures { get; set; }
     }
 }

@@ -33,5 +33,10 @@ namespace SmartSolucionesCuba.Covid19CubaInfo.Cloud.SyncronizationService.Models
 
         [JsonProperty(PropertyName = "chequeado")]
         internal bool Checked { get; set; }
+
+        public bool Equals(Api.Common.Models.EventDisplayModel model)
+        {
+            return Label == model.Label && Opened == model.Opened && CenterGeoPointLatitude == model.CenterGeoPointLatitude && CenterGeoPointLongitude == model.CenterGeoPointLongitude;
+        }
     }
 }

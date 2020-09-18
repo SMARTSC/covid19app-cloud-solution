@@ -11,7 +11,6 @@ namespace SmartSolucionesCuba.Covid19CubaInfo.Cloud.Persistence.EF.Providers
         {
             new Configurators.CaseCountryBridgeEntityTypeConfigurator(),
             new Configurators.CaseProvinceBridgeEntityTypeConfigurator(),
-            new Configurators.EventGeoPointBridgeEntityTypeConfigurator(),
             new Configurators.ReportDeadCaseBridgeEntityTypeConfigurator(),
             new Configurators.ReportEvacuateCaseBridgeEntityTypeConfigurator(),
             new Configurators.ReportGraveCaseBridgeEntityTypeConfigurator(),

@@ -9,8 +9,8 @@ using SmartSolucionesCuba.Covid19CubaInfo.Cloud.Persistence.EF.Context;
 namespace SmartSolucionesCuba.Covid19CubaInfo.Cloud.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200506005113_InitialSchemaMigration")]
-    partial class InitialSchemaMigration
+    [Migration("20200527171258_RemoveThrowableReportRelationsSchemaMigration")]
+    partial class RemoveThrowableReportRelationsSchemaMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -19,9 +19,57 @@ namespace SmartSolucionesCuba.Covid19CubaInfo.Cloud.Migrations
                 .HasAnnotation("ProductVersion", "2.2.2-servicing-10034")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
+            modelBuilder.Entity("SmartSolucionesCuba.Covid19CubaInfo.Cloud.Persistence.Entities.AppUpdateAdvise", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("id");
+
+                    b.Property<string>("AccessLink")
+                        .IsRequired()
+                        .HasColumnName("accesslink");
+
+                    b.Property<int>("PushDay")
+                        .HasColumnName("pushday");
+
+                    b.Property<DateTime>("ReleasedAt")
+                        .HasColumnName("releasedat");
+
+                    b.Property<string>("Version")
+                        .IsRequired()
+                        .HasColumnName("version");
+
+                    b.HasKey("Id")
+                        .HasName("pk_appupdateadvises");
+
+                    b.ToTable("appupdateadvises");
+                });
+
+            modelBuilder.Entity("SmartSolucionesCuba.Covid19CubaInfo.Cloud.Persistence.Entities.AppUpdateFeature", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("id");
+
+                    b.Property<int>("AdviseId")
+                        .HasColumnName("adviseid");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnName("description");
+
+                    b.HasKey("Id")
+                        .HasName("pk_appupdatefeatures");
+
+                    b.HasIndex("AdviseId")
+                        .HasName("ix_appupdatefeatures_adviseid");
+
+                    b.ToTable("appupdatefeatures");
+                });
+
             modelBuilder.Entity("SmartSolucionesCuba.Covid19CubaInfo.Cloud.Persistence.Entities.Case", b =>
                 {
-                    b.Property<string>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnName("id");
 
@@ -43,7 +91,7 @@ namespace SmartSolucionesCuba.Covid19CubaInfo.Cloud.Migrations
                     b.Property<DateTime>("DetectAt")
                         .HasColumnName("detectat");
 
-                    b.Property<int>("DetectionMunicipalityId")
+                    b.Property<string>("DetectionMunicipalityId")
                         .HasColumnName("detectionmunicipalityid");
 
                     b.Property<string>("DiagnosticCenterId")
@@ -84,7 +132,7 @@ namespace SmartSolucionesCuba.Covid19CubaInfo.Cloud.Migrations
 
             modelBuilder.Entity("SmartSolucionesCuba.Covid19CubaInfo.Cloud.Persistence.Entities.CaseCountryBridge", b =>
                 {
-                    b.Property<string>("CaseId")
+                    b.Property<long>("CaseId")
                         .HasColumnName("caseid");
 
                     b.Property<string>("CountryId")
@@ -101,7 +149,7 @@ namespace SmartSolucionesCuba.Covid19CubaInfo.Cloud.Migrations
 
             modelBuilder.Entity("SmartSolucionesCuba.Covid19CubaInfo.Cloud.Persistence.Entities.CaseProvinceBridge", b =>
                 {
-                    b.Property<string>("CaseId")
+                    b.Property<long>("CaseId")
                         .HasColumnName("caseid");
 
                     b.Property<int>("ProvinceId")
@@ -134,8 +182,11 @@ namespace SmartSolucionesCuba.Covid19CubaInfo.Cloud.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnName("id");
 
-                    b.Property<Guid>("GeoPointId")
-                        .HasColumnName("geopointid");
+                    b.Property<decimal>("GeoPointLatitude")
+                        .HasColumnName("geopointlatitude");
+
+                    b.Property<decimal>("GeoPointLongitude")
+                        .HasColumnName("geopointlongitude");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -144,11 +195,11 @@ namespace SmartSolucionesCuba.Covid19CubaInfo.Cloud.Migrations
                     b.Property<int>("ProvinceId")
                         .HasColumnName("provinceid");
 
+                    b.Property<int>("PushDay")
+                        .HasColumnName("pushday");
+
                     b.HasKey("Id")
                         .HasName("pk_diagnosticcenters");
-
-                    b.HasIndex("GeoPointId")
-                        .HasName("ix_diagnosticcenters_geopointid");
 
                     b.HasIndex("ProvinceId")
                         .HasName("ix_diagnosticcenters_provinceid");
@@ -162,8 +213,14 @@ namespace SmartSolucionesCuba.Covid19CubaInfo.Cloud.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnName("id");
 
-                    b.Property<Guid>("CenterGeoPointId")
-                        .HasColumnName("centergeopointid");
+                    b.Property<string>("AreaGeoData")
+                        .HasColumnName("areageodata");
+
+                    b.Property<decimal>("CenterGeoPointLatitude")
+                        .HasColumnName("centergeopointlatitude");
+
+                    b.Property<decimal>("CenterGeoPointLongitude")
+                        .HasColumnName("centergeopointlongitude");
 
                     b.Property<bool>("Checked")
                         .HasColumnName("checked");
@@ -172,57 +229,22 @@ namespace SmartSolucionesCuba.Covid19CubaInfo.Cloud.Migrations
                         .IsRequired()
                         .HasColumnName("label");
 
-                    b.Property<int>("MunicipalityId")
+                    b.Property<string>("MunicipalityId")
                         .HasColumnName("municipalityid");
 
                     b.Property<bool>("Opened")
                         .HasColumnName("opened");
 
+                    b.Property<int>("PushDay")
+                        .HasColumnName("pushday");
+
                     b.HasKey("Id")
                         .HasName("pk_events");
-
-                    b.HasIndex("CenterGeoPointId")
-                        .HasName("ix_events_centergeopointid");
 
                     b.HasIndex("MunicipalityId")
                         .HasName("ix_events_municipalityid");
 
                     b.ToTable("events");
-                });
-
-            modelBuilder.Entity("SmartSolucionesCuba.Covid19CubaInfo.Cloud.Persistence.Entities.EventGeoPointBridge", b =>
-                {
-                    b.Property<string>("EventId")
-                        .HasColumnName("eventid");
-
-                    b.Property<Guid>("GeoPointId")
-                        .HasColumnName("geopointid");
-
-                    b.HasKey("EventId", "GeoPointId")
-                        .HasName("pk_eventgeopointbridges");
-
-                    b.HasIndex("GeoPointId")
-                        .HasName("ix_eventgeopointbridges_geopointid");
-
-                    b.ToTable("eventgeopointbridges");
-                });
-
-            modelBuilder.Entity("SmartSolucionesCuba.Covid19CubaInfo.Cloud.Persistence.Entities.GeoPoint", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnName("id");
-
-                    b.Property<decimal>("Latitude")
-                        .HasColumnName("latitude");
-
-                    b.Property<decimal>("Longitude")
-                        .HasColumnName("longitude");
-
-                    b.HasKey("Id")
-                        .HasName("pk_geopoints");
-
-                    b.ToTable("geopoints");
                 });
 
             modelBuilder.Entity("SmartSolucionesCuba.Covid19CubaInfo.Cloud.Persistence.Entities.IsolationCenter", b =>
@@ -231,8 +253,11 @@ namespace SmartSolucionesCuba.Covid19CubaInfo.Cloud.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnName("id");
 
-                    b.Property<Guid>("GeoPointId")
-                        .HasColumnName("geopointid");
+                    b.Property<decimal>("GeoPointLatitude")
+                        .HasColumnName("geopointlatitude");
+
+                    b.Property<decimal>("GeoPointLongitude")
+                        .HasColumnName("geopointlongitude");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -241,11 +266,11 @@ namespace SmartSolucionesCuba.Covid19CubaInfo.Cloud.Migrations
                     b.Property<int>("ProvinceId")
                         .HasColumnName("provinceid");
 
+                    b.Property<int>("PushDay")
+                        .HasColumnName("pushday");
+
                     b.HasKey("Id")
                         .HasName("pk_isolationcenters");
-
-                    b.HasIndex("GeoPointId")
-                        .HasName("ix_isolationcenters_geopointid");
 
                     b.HasIndex("ProvinceId")
                         .HasName("ix_isolationcenters_provinceid");
@@ -255,7 +280,8 @@ namespace SmartSolucionesCuba.Covid19CubaInfo.Cloud.Migrations
 
             modelBuilder.Entity("SmartSolucionesCuba.Covid19CubaInfo.Cloud.Persistence.Entities.Municipality", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnName("id");
 
                     b.Property<string>("Name")
@@ -332,7 +358,7 @@ namespace SmartSolucionesCuba.Covid19CubaInfo.Cloud.Migrations
                     b.Property<int>("ReportId")
                         .HasColumnName("reportid");
 
-                    b.Property<string>("CaseId")
+                    b.Property<long>("CaseId")
                         .HasColumnName("caseid");
 
                     b.HasKey("ReportId", "CaseId")
@@ -349,7 +375,7 @@ namespace SmartSolucionesCuba.Covid19CubaInfo.Cloud.Migrations
                     b.Property<int>("ReportId")
                         .HasColumnName("reportid");
 
-                    b.Property<string>("CaseId")
+                    b.Property<long>("CaseId")
                         .HasColumnName("caseid");
 
                     b.HasKey("ReportId", "CaseId")
@@ -366,7 +392,7 @@ namespace SmartSolucionesCuba.Covid19CubaInfo.Cloud.Migrations
                     b.Property<int>("ReportId")
                         .HasColumnName("reportid");
 
-                    b.Property<string>("CaseId")
+                    b.Property<long>("CaseId")
                         .HasColumnName("caseid");
 
                     b.HasKey("ReportId", "CaseId")
@@ -383,7 +409,7 @@ namespace SmartSolucionesCuba.Covid19CubaInfo.Cloud.Migrations
                     b.Property<int>("ReportId")
                         .HasColumnName("reportid");
 
-                    b.Property<string>("CaseId")
+                    b.Property<long>("CaseId")
                         .HasColumnName("caseid");
 
                     b.HasKey("ReportId", "CaseId")
@@ -400,7 +426,7 @@ namespace SmartSolucionesCuba.Covid19CubaInfo.Cloud.Migrations
                     b.Property<int>("ReportId")
                         .HasColumnName("reportid");
 
-                    b.Property<string>("CaseId")
+                    b.Property<long>("CaseId")
                         .HasColumnName("caseid");
 
                     b.HasKey("ReportId", "CaseId")
@@ -410,6 +436,58 @@ namespace SmartSolucionesCuba.Covid19CubaInfo.Cloud.Migrations
                         .HasName("ix_reportrecoveredcasebridges_caseid");
 
                     b.ToTable("reportrecoveredcasebridges");
+                });
+
+            modelBuilder.Entity("SmartSolucionesCuba.Covid19CubaInfo.Cloud.Persistence.Entities.VendorAdvise", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("id");
+
+                    b.Property<string>("AccessLink")
+                        .IsRequired()
+                        .HasColumnName("accesslink");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnName("description");
+
+                    b.Property<int>("PushDay")
+                        .HasColumnName("pushday");
+
+                    b.Property<string>("ThumbnailImageLink")
+                        .HasColumnName("thumbnailimagelink");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnName("title");
+
+                    b.HasKey("Id")
+                        .HasName("pk_vendoradvises");
+
+                    b.ToTable("vendoradvises");
+                });
+
+            modelBuilder.Entity("SmartSolucionesCuba.Covid19CubaInfo.Cloud.Persistence.Entities.VendorAdviseFeature", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("id");
+
+                    b.Property<int>("AdviseId")
+                        .HasColumnName("adviseid");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnName("description");
+
+                    b.HasKey("Id")
+                        .HasName("pk_vendoradvisefeatures");
+
+                    b.HasIndex("AdviseId")
+                        .HasName("ix_vendoradvisefeatures_adviseid");
+
+                    b.ToTable("vendoradvisefeatures");
                 });
 
             modelBuilder.Entity("SmartSolucionesCuba.SAPRESSC.Core.Persistence.EF.Entities.Trace", b =>
@@ -450,6 +528,15 @@ namespace SmartSolucionesCuba.Covid19CubaInfo.Cloud.Migrations
                     b.ToTable("traces");
                 });
 
+            modelBuilder.Entity("SmartSolucionesCuba.Covid19CubaInfo.Cloud.Persistence.Entities.AppUpdateFeature", b =>
+                {
+                    b.HasOne("SmartSolucionesCuba.Covid19CubaInfo.Cloud.Persistence.Entities.AppUpdateAdvise", "Advise")
+                        .WithMany("Features")
+                        .HasForeignKey("AdviseId")
+                        .HasConstraintName("fk_appupdatefeatures_appupdateadvises_adviseid")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("SmartSolucionesCuba.Covid19CubaInfo.Cloud.Persistence.Entities.Case", b =>
                 {
                     b.HasOne("SmartSolucionesCuba.Covid19CubaInfo.Cloud.Persistence.Entities.Country", "Country")
@@ -460,8 +547,7 @@ namespace SmartSolucionesCuba.Covid19CubaInfo.Cloud.Migrations
                     b.HasOne("SmartSolucionesCuba.Covid19CubaInfo.Cloud.Persistence.Entities.Municipality", "DetectionMunicipality")
                         .WithMany()
                         .HasForeignKey("DetectionMunicipalityId")
-                        .HasConstraintName("fk_cases_municipalities_detectionmunicipalityid")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasConstraintName("fk_cases_municipalities_detectionmunicipalityid");
 
                     b.HasOne("SmartSolucionesCuba.Covid19CubaInfo.Cloud.Persistence.Entities.DiagnosticCenter", "DiagnosticCenter")
                         .WithMany()
@@ -512,12 +598,6 @@ namespace SmartSolucionesCuba.Covid19CubaInfo.Cloud.Migrations
 
             modelBuilder.Entity("SmartSolucionesCuba.Covid19CubaInfo.Cloud.Persistence.Entities.DiagnosticCenter", b =>
                 {
-                    b.HasOne("SmartSolucionesCuba.Covid19CubaInfo.Cloud.Persistence.Entities.GeoPoint", "GeoPoint")
-                        .WithMany()
-                        .HasForeignKey("GeoPointId")
-                        .HasConstraintName("fk_diagnosticcenters_geopoints_geopointid")
-                        .OnDelete(DeleteBehavior.Cascade);
-
                     b.HasOne("SmartSolucionesCuba.Covid19CubaInfo.Cloud.Persistence.Entities.Province", "Province")
                         .WithMany()
                         .HasForeignKey("ProvinceId")
@@ -527,42 +607,14 @@ namespace SmartSolucionesCuba.Covid19CubaInfo.Cloud.Migrations
 
             modelBuilder.Entity("SmartSolucionesCuba.Covid19CubaInfo.Cloud.Persistence.Entities.Event", b =>
                 {
-                    b.HasOne("SmartSolucionesCuba.Covid19CubaInfo.Cloud.Persistence.Entities.GeoPoint", "CenterGeoPoint")
-                        .WithMany()
-                        .HasForeignKey("CenterGeoPointId")
-                        .HasConstraintName("fk_events_geopoints_centergeopointid")
-                        .OnDelete(DeleteBehavior.Cascade);
-
                     b.HasOne("SmartSolucionesCuba.Covid19CubaInfo.Cloud.Persistence.Entities.Municipality", "Municipality")
                         .WithMany()
                         .HasForeignKey("MunicipalityId")
-                        .HasConstraintName("fk_events_municipalities_municipalityid")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("SmartSolucionesCuba.Covid19CubaInfo.Cloud.Persistence.Entities.EventGeoPointBridge", b =>
-                {
-                    b.HasOne("SmartSolucionesCuba.Covid19CubaInfo.Cloud.Persistence.Entities.Event", "Event")
-                        .WithMany("AreaGeoPointBridges")
-                        .HasForeignKey("EventId")
-                        .HasConstraintName("fk_eventgeopointbridges_events_eventid")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("SmartSolucionesCuba.Covid19CubaInfo.Cloud.Persistence.Entities.GeoPoint", "GeoPoint")
-                        .WithMany()
-                        .HasForeignKey("GeoPointId")
-                        .HasConstraintName("fk_eventgeopointbridges_geopoints_geopointid")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasConstraintName("fk_events_municipalities_municipalityid");
                 });
 
             modelBuilder.Entity("SmartSolucionesCuba.Covid19CubaInfo.Cloud.Persistence.Entities.IsolationCenter", b =>
                 {
-                    b.HasOne("SmartSolucionesCuba.Covid19CubaInfo.Cloud.Persistence.Entities.GeoPoint", "GeoPoint")
-                        .WithMany()
-                        .HasForeignKey("GeoPointId")
-                        .HasConstraintName("fk_isolationcenters_geopoints_geopointid")
-                        .OnDelete(DeleteBehavior.Cascade);
-
                     b.HasOne("SmartSolucionesCuba.Covid19CubaInfo.Cloud.Persistence.Entities.Province", "Province")
                         .WithMany()
                         .HasForeignKey("ProvinceId")
@@ -651,6 +703,15 @@ namespace SmartSolucionesCuba.Covid19CubaInfo.Cloud.Migrations
                         .WithMany("RecoveredCaseBridges")
                         .HasForeignKey("ReportId")
                         .HasConstraintName("fk_reportrecoveredcasebridges_reports_reportid")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("SmartSolucionesCuba.Covid19CubaInfo.Cloud.Persistence.Entities.VendorAdviseFeature", b =>
+                {
+                    b.HasOne("SmartSolucionesCuba.Covid19CubaInfo.Cloud.Persistence.Entities.VendorAdvise", "Advise")
+                        .WithMany("Features")
+                        .HasForeignKey("AdviseId")
+                        .HasConstraintName("fk_vendoradvisefeatures_vendoradvises_adviseid")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618

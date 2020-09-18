@@ -18,7 +18,7 @@ namespace SmartSolucionesCuba.Covid19CubaInfo.Cloud.Middlewares
 
         public async System.Threading.Tasks.Task Invoke(HttpContext context)
         {
-            if (context.Request.Path.StartsWithSegments(new PathString("/api/backend/")) && (!context.Request.Headers.Keys.Contains(API_KEY_HEADER_PROPERTY) || !context.Request.Headers[API_KEY_HEADER_PROPERTY][0].Equals(apiKeyOptions.Value.BackendSecret)))
+            if (context.Request.Path.Value.StartsWith("/api/backend/") && (!context.Request.Headers.Keys.Contains(API_KEY_HEADER_PROPERTY) || !context.Request.Headers[API_KEY_HEADER_PROPERTY][0].Equals(apiKeyOptions.Value.BackendSecret)))
             {
                 context.Response.StatusCode = (int)System.Net.HttpStatusCode.UpgradeRequired;
 
@@ -27,7 +27,7 @@ namespace SmartSolucionesCuba.Covid19CubaInfo.Cloud.Middlewares
                 return;
             }
 
-            if (context.Request.Path.StartsWithSegments(new PathString("/api/")) && (!context.Request.Headers.Keys.Contains(API_KEY_HEADER_PROPERTY) || !context.Request.Headers[API_KEY_HEADER_PROPERTY][0].Equals(apiKeyOptions.Value.FrontendSecret)))
+            if (context.Request.Path.Value.StartsWith("/api/frontend/") && (!context.Request.Headers.Keys.Contains(API_KEY_HEADER_PROPERTY) || !context.Request.Headers[API_KEY_HEADER_PROPERTY][0].Equals(apiKeyOptions.Value.FrontendSecret)))
             {
                 context.Response.StatusCode = (int)System.Net.HttpStatusCode.UpgradeRequired;
 
