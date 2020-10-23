@@ -174,6 +174,11 @@ namespace SmartSolucionesCuba.Covid19CubaInfo.Cloud.SyncronizationService.Extens
 
             foreach (var model in newMunicipalities)
             {
+                if (model.Name == null)
+                {
+                    model.Name = "Desconocido";
+                }
+
                 await municipalitiesApiClient.CreateAsync(model);
             }
         }

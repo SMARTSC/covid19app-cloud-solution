@@ -126,6 +126,8 @@ namespace SmartSolucionesCuba.Covid19CubaInfo.Cloud.SyncronizationService.Worker
                 }
 
                 await reportsApiClient.CreateAsync(input);
+
+                await System.Threading.Tasks.Task.Delay(System.TimeSpan.FromSeconds(1));
             }
         }
 
